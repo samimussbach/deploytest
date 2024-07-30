@@ -47,7 +47,7 @@ jobs:
             docker stop myapp-pr-${{ github.event.number }} || true
             docker rm myapp-pr-${{ github.event.number }} || true
             docker run -d --name myapp-pr-${{ github.event.number }} -p 300${{ github.event.number }}:3000 ${{ secrets.DOCKER_USERNAME }}/myapp:pr-${{ github.event.number }}
-            /usr/local/bin/manage_certbot.sh pr-${{ github.event.number }}.37.27.193.203 create
+            /usr/local/bin/manage_certbot.sh pr-${{ github.event.number }}.kaspaar.de create
           EOF
 
   cleanup:
@@ -68,5 +68,5 @@ jobs:
           ssh $SERVER_USER@$SERVER_IP <<EOF
             docker stop myapp-pr-${{ github.event.number }}
             docker rm myapp-pr-${{ github.event.number }}
-            /usr/local/bin/manage_certbot.sh pr-${{ github.event.number }}.37.27.193.203 delete
+            /usr/local/bin/manage_certbot.sh pr-${{ github.event.number }}.kaspaar.de delete
           EOF
