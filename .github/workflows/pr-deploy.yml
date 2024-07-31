@@ -28,9 +28,14 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/myapp:pr-${{ github.event.number }}
 
       - name: Install SSH Key
-        uses: webfactory/ssh-agent@v0.5.3
+        uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
       - name: Deploy to server
         env:
@@ -42,7 +47,7 @@ jobs:
             docker stop myapp-pr-${{ github.event.number }} || true
             docker rm myapp-pr-${{ github.event.number }} || true
             docker run -d --name myapp-pr-${{ github.event.number }} -p 300${{ github.event.number }}:3000 ${{ secrets.DOCKER_USERNAME }}/myapp:pr-${{ github.event.number }}
-            /usr/local/bin/manage_certbot.sh pr-${{ github.event.number }}.example.com create
+            /usr/local/bin/manage_certbot.sh pr-${{ github.event.number }}.kaspaar.de create
           EOF
 
   cleanup:
@@ -51,7 +56,7 @@ jobs:
 
     steps:
       - name: Install SSH Key
-        uses: webfactory/ssh-agent@v0.5.3
+        uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
@@ -63,5 +68,5 @@ jobs:
           ssh $SERVER_USER@$SERVER_IP <<EOF
             docker stop myapp-pr-${{ github.event.number }}
             docker rm myapp-pr-${{ github.event.number }}
-            /usr/local/bin/manage_certbot.sh pr-${{ github.event.number }}.example.com delete
+            /usr/local/bin/manage_certbot.sh pr-${{ github.event.number }}.kaspaar.de delete
           EOF
