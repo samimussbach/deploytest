@@ -9,7 +9,7 @@ describe('GET /', function () {
             .end((err, res) => {
                 if (err) return done(err);
                 expect(res.status).to.equal(200);
-                expect(res.text).to.equal('Hello World! This is my PR 7');
+                expect(res.text).to.equal('Hello World! This is my PR 7, push');
                 done();
             });
     });
